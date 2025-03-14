@@ -18,8 +18,13 @@
 
       <div id="projects">
         <ul id="main">
-          <li><a href="#personal">Personal</a></li>
-          <li><a href="#work">Work</a></li>
+          <li>
+            <a href="#personal">Personal</a
+            ><span class="ui-icon ui-icon-close"></span>
+          </li>
+          <li>
+            <a href="#work">Work</a><span class="ui-icon ui-icon-close"></span>
+          </li>
         </ul>
 
         <ol id="personal">
@@ -74,13 +79,23 @@
         // });
 
         //
-        $("#projects").on("click", "input[type=checkbox]", function(){
+        $("#projects").on("click", "input[type=checkbox]", function () {
           $(this)
             .closest("li")
             .slideUp(function () {
               $(this).remove();
             });
         });
+        $("#projects").on("click", "span.ui-icon-close", function () {
+          var index = $(this).closest("li").index(); // Get tab index
+          var id = $("#main li:eq(" + index + ") a").attr("href"); // Get tab href (e.g., "#personal")
+
+          $("#main li:eq(" + index + ")").remove(); // Remove tab from list
+          $(id).remove(); // Remove the corresponding tab content (the <ol>)
+
+          $("#projects").tabs("refresh"); // Refresh jQuery UI tabs to update UI
+        });
+
         $("#buttonAddProject")
           .button()
           .click(function () {
@@ -104,7 +119,7 @@
                       projectName +
                       "'>" +
                       projectName +
-                      "</a></li>"
+                      "</a><span class='ui-icon ui-icon-close'></span></li>"
                   ).appendTo("#main");
                   //to make the last inserted tab active immediately
 
