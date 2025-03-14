@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>My toDO List</title>
+    <link rel="stylesheet" href="style.css" />
+    <link
+      rel="stylesheet"
+      href="https://code.jquery.com/ui/1.14.1/themes/base/jquery-ui.css"
+    />
+    <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+    <script src="https://code.jquery.com/ui/1.14.1/jquery-ui.js"></script>
+  </head>
+  <body>
+    <div id="container">
+      <h2>To Do List</h2>
+
+      <div id="projects">
+        <ul id="main">
+          <li><a href="#personal">Personal</a></li>
+          <li><a href="#work">Work</a></li>
+        </ul>
+
+        <ol id="personal">
+          <li><input type="checkbox" /> Doctor appointment</li>
+          <li><input type="checkbox" />Pay school fee</li>
+          <li><input type="checkbox" />Call the plumber</li>
+        </ol>
+
+        <ol id="work">
+          <li><input type="checkbox" />Meet project manager</li>
+          <li><input type="checkbox" />Complete test case document</li>
+          <li><input type="checkbox" />Rocord video for jQuery course</li>
+        </ol>
+      </div>
+
+      <div id="project-dialog" style="display: none">
+        <label for="new-project">Project Name:</label>
+        <input id="new-project" type="text" />
+      </div>
+      <div id="task-dialog" style="display: none" title="Add a new Task">
+        <label for="new-task">Task Name:</label>
+        <input id="new-task" type="text" />
+      </div>
+
+      <div id="container2">
+        <button id="buttonAddProject">Add Project</button>
+        <button id="buttonAddTask">Add Task</button>
+      </div>
+    </div>
+
+    <script>
+      $(document).ready(function () {
+        $("#projects").tabs();
+
+        $("#main").sortable({
+          axis: "x",
+          containment: "parent",
+        });
+
+        $("ol").sortable({
+          axis: "y",
+          containment: "parent",
+        });
+
+        $("#buttonAddProject")
+          .button()
+          .click(function () {
+            $("#project-dialog").dialog({
+              resizable: false,
+              height: "auto",
+              width: 350,
+              modal: true,
+              show: "slide",
+              title: "Add a new project",
+              buttons: {
+                "Add new project": function () {
+                  var projectName = $("#new-project").val();
+                  $(
+                    "<li><a href='#" +
+                      projectName +
+                      "'>" +
+                      projectName +
+                      "</a></li>"
+                  ).appendTo("#main");
+                  //to make the last inserted tab active immediately
+
+                  $("<ol id='" + projectName + "'</ol>").appendTo("#projects");
+                  $("#projects").tabs("refresh");
+                  var tabsCount = $("#projects .ui-tabs-nav li").length;
+                  $("#projects").tabs("option", "active", tabsCount - 1);
+                  //   this is another way to make active last inserted tab
+                  // $("#projects").tabs("refresh");
+                  // $("#main li:last-child a").click();
+
+                  // Clear input and close dialog
+                  $("#new-project").val("");
+                  $(this).dialog("close");
+                },
+
+                Cancel: function () {
+                  $("#new-project").val("");
+                  $(this).dialog("close");
+                },
+              },
+            });
+          });
+
+        $("#buttonAddTask")
+          .button()
+          .click(function () {
+            $("#task-dialog").dialog({
+              resizable: false,
+              height: "auto",
+              width: 350,
+              modal: true,
+              show: "slide",
+              buttons: {
+                "Add new Task": function(){
+                  $("#projects").tabs("refresh");
+                  var activeTab=$("#projects").tabs("option", "active"); 
+                  alert(activeTab);
+                  $("#new-task").val("");
+                  $(this).dialog("close");
+                },
+                "Cancle": function(){
+                  $("#new-task").val("");
+                  $(this).dialog("close");
+                }
+
+              }
+            });
+          });
+      });
+    </script>
+  </body>
+</html>
