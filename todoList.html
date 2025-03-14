@@ -23,7 +23,7 @@
         </ul>
 
         <ol id="personal">
-          <li><input type="checkbox" /> Doctor appointment</li>
+          <li><input type="checkbox" />Doctor appointment</li>
           <li><input type="checkbox" />Pay school fee</li>
           <li><input type="checkbox" />Call the plumber</li>
         </ol>
@@ -77,6 +77,7 @@
               buttons: {
                 "Add new project": function () {
                   var projectName = $("#new-project").val();
+                  var projectName = projectName.split(" ").join("_");
                   $(
                     "<li><a href='#" +
                       projectName +
@@ -119,12 +120,18 @@
               buttons: {
                 "Add new Task": function(){
                   $("#projects").tabs("refresh");
-                  var activeTab=$("#projects").tabs("option", "active"); 
-                  alert(activeTab);
+                  var activeTab=$("#projects").tabs("option", "active");
+                  // > means direct child , nth-child is a 1 based index
+                  // var tabId = $("#main > li:nth-child(2) > a").attr("href");
+                  var tabId = $("#main > li:nth-child(" + (activeTab + 1) + ") > a").attr("href");
+                  // alert(tabId);
+                  $(tabId).append("<li><input type='checkbox' />" + $("#new-task").val() + "</li>").sortable();
+
+
                   $("#new-task").val("");
                   $(this).dialog("close");
                 },
-                "Cancle": function(){
+                "Cancel": function(){
                   $("#new-task").val("");
                   $(this).dialog("close");
                 }
