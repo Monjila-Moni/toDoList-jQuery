@@ -52,6 +52,7 @@
 
     <script>
       $(document).ready(function () {
+        $("input[type=checkbox]").removeAttr("checked");
         $("#projects").tabs();
 
         $("#main").sortable({
@@ -63,7 +64,23 @@
           axis: "y",
           containment: "parent",
         });
+        //click only works with existing element, not works with dynamically added element
+        // $("input[type=checkbox]").click(function () {
+        //   $(this)
+        //     .closest("li")
+        //     .slideUp(function () {
+        //       $(this).remove();
+        //     });
+        // });
 
+        //
+        $("#projects").on("click", "input[type=checkbox]", function(){
+          $(this)
+            .closest("li")
+            .slideUp(function () {
+              $(this).remove();
+            });
+        });
         $("#buttonAddProject")
           .button()
           .click(function () {
@@ -72,7 +89,11 @@
               height: "auto",
               width: 350,
               modal: true,
-              show: "slide",
+              show: {
+                effect: "slide",
+                duration: 1000, // Animation duration (in milliseconds)
+                delay: 0, // Delay before animation starts (in milliseconds)
+              },
               title: "Add a new project",
               buttons: {
                 "Add new project": function () {
@@ -116,27 +137,37 @@
               height: "auto",
               width: 350,
               modal: true,
-              show: "slide",
+              show: {
+                effect: "slide",
+                duration: 1000, // Animation duration (in milliseconds)
+                delay: 0, // Delay before animation starts (in milliseconds)
+              },
               buttons: {
-                "Add new Task": function(){
+                "Add new Task": function () {
                   $("#projects").tabs("refresh");
-                  var activeTab=$("#projects").tabs("option", "active");
+                  var activeTab = $("#projects").tabs("option", "active");
                   // > means direct child , nth-child is a 1 based index
                   // var tabId = $("#main > li:nth-child(2) > a").attr("href");
-                  var tabId = $("#main > li:nth-child(" + (activeTab + 1) + ") > a").attr("href");
+                  var tabId = $(
+                    "#main > li:nth-child(" + (activeTab + 1) + ") > a"
+                  ).attr("href");
                   // alert(tabId);
-                  $(tabId).append("<li><input type='checkbox' />" + $("#new-task").val() + "</li>").sortable();
-
+                  $(tabId)
+                    .append(
+                      "<li><input type='checkbox' />" +
+                        $("#new-task").val() +
+                        "</li>"
+                    )
+                    .sortable();
 
                   $("#new-task").val("");
                   $(this).dialog("close");
                 },
-                "Cancel": function(){
+                Cancel: function () {
                   $("#new-task").val("");
                   $(this).dialog("close");
-                }
-
-              }
+                },
+              },
             });
           });
       });
